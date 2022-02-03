@@ -3,12 +3,35 @@ import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
+# open API
+import urllib.request
+client_id = "R8kWOPeafPnDEV9L_CIj"
+client_secret = "Lwcj1_xJlJ"
+
+# API body
+url = "https://openapi.naver.com/v1/search/blog"
+query = "?query=" + urllib.parse.quote("랑그릿사")
+option = "&display=1"
+url_query = url + query + option  # json 결과
+
+## API 검색 요청 개체 설정
+request = urllib.request.Request(url_query)
+request.add_header("X-Naver-Client-Id", client_id)
+request.add_header("X-Naver-Client-Secret", client_secret)
+
+## 검색 요청 및 처리
+response = urllib.request.urlopen(request)
+rescode = response.getcode()
+if (rescode == 200):
+    response_body = response.read()
+    print(response_body.decode('utf-8'))
+else:
+    print("Error Code:" + rescode)
+
+# Server
 client = MongoClient('localhost', 27017)
 db = client.comsun
 app = Flask(__name__)
-
-# open API
-import urllib.request
 
 
 # HTML을 주는 부분
@@ -55,22 +78,6 @@ def post_list():
 
     return jsonify({'result': 'success', 'msg': 'POST 연결되었습니다!'})
 
-
-client_id = "YOUR_CLIENT_ID"
-client_secret = "YOUR_CLIENT_SECRET"
-encText = urllib.parse.quote("검색할 단어")
-url = "https://openapi.naver.com/v1/search/blog?query=" + encText  # json 결과
-# url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # xml 결과
-request = urllib.request.Request(url)
-request.add_header("X-Naver-Client-Id", client_id)
-request.add_header("X-Naver-Client-Secret", client_secret)
-response = urllib.request.urlopen(request)
-rescode = response.getcode()
-if (rescode == 200):
-    response_body = response.read()
-    print(response_body.decode('utf-8'))
-else:
-    print("Error Code:" + rescode)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
