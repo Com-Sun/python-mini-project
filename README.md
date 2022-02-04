@@ -54,6 +54,16 @@ def read_list():
       if __name__ == '__main__':
       app.run('0.0.0.0', port=5000, debug=True)
 - 위의 코드 의미
+- 선택자 사용 방법:
+
+```
+i.text: i 중에 text 가져오기
+i['link']: i 중에 link 속성값 가져오기
+a_tag = i.select_one('div.total_area > a')
+        title = a_tag.text
+        여기서 select와 select_one일때 .text 사용
+```
+
 
 ## 프로젝트 진행 과정
 
@@ -87,3 +97,13 @@ def read_list():
 - 원래 기획: 네이버 비로그인 오픈 API와 연동하기
 - 수정: 일반적인 네이버 웹 스크래핑
 - 이유: 이 프로젝트의 목적을 상기하자. SW사관학교 정글에서 배부한 자료를 나의 방식으로 학습하기 + 백엔드 지식 학습이다. 새로운 것을 학습하기 보다는 몰랐던 지식을 알아가는 것에 집중하자.
+
+### Third commit
+
+구현 목록:
+- 검색어 입력시 타이틀, 썸네일 사진, 설명, 링크를 모두 추출한다.
+
+![](./img/5.PNG)
+
+다음에 구현할 기능:
+- 추출한 데이터를 Mongo DB에 저장하기

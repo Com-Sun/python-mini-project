@@ -38,11 +38,30 @@ def comsec_post():
     data = requests.get(comsec_receive, headers=headers)
     soup = BeautifulSoup(data.text, 'html.parser')
 
+    # views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
+    #                     '> li > div.total_wrap.api_ani_send > div > a')
+
     views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
-                        '> li > div.total_wrap.api_ani_send > div > a')
+                        '> li > div.total_wrap.api_ani_send')
+    # imgs = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
+    #                    '> li > div.total_wrap.api_ani_send > a > span > img')
     for i in views:
-        title = i.text
-        print(title)
+        # img
+        img_tag = i.select_one('a.thumb_single > span > img')
+        if img_tag is not None:
+            img = img_tag['src']
+            a_tag = i.select_one('div.total_area > a')
+
+            # title
+            title = a_tag.text
+
+            # link
+            link = a_tag['href']
+
+            # description
+            desc_tag = i.select_one('div.total_area > div.total_group > div > a > div')
+            desc = desc_tag.text
+            print(title, img, link, desc)
 
     # og_image = soup.select_one('meta[property="og:image"]')
     # og_title = soup.select_one('meta[property="og:title"]')
