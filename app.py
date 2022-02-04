@@ -9,6 +9,7 @@ client = MongoClient('localhost', 27017)
 db = client.comsun
 app = Flask(__name__)
 
+
 # HTML을 주는 부분
 @app.route('/')
 def home():
@@ -37,16 +38,21 @@ def comsec_post():
     data = requests.get(comsec_receive, headers=headers)
     soup = BeautifulSoup(data.text, 'html.parser')
 
-    og_image = soup.select_one('meta[property="og:image"]')
-    og_title = soup.select_one('meta[property="og:title"]')
-    og_description = soup.select_one('meta[property="og:description"]')
+    views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
+                        '> li > div.total_wrap.api_ani_send > div > a')
+    for i in views:
+        title = i.text
+        print(title)
 
-    url_title = og_title['content']
-    url_description = og_description['content']
-    url_image = og_image['content']
+    # og_image = soup.select_one('meta[property="og:image"]')
+    # og_title = soup.select_one('meta[property="og:title"]')
+    # og_description = soup.select_one('meta[property="og:description"]')
+    #
+    # url_title = og_title['content']
+    # url_description = og_description['content']
+    # url_image = og_image['content']
 
-    article = {'url': comsec_receive, 'title': url_title, 'desc': url_description, 'img': url_image}
-    print(soup)
+    # article = {'url': comsec_receive, 'title': url_title, 'desc': url_description, 'img': url_image}
 
     # db에 넣기
     # db.comsec.insert_one(article)
