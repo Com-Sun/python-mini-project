@@ -37,14 +37,8 @@ def comsec_post():
     }
     data = requests.get(comsec_receive, headers=headers)
     soup = BeautifulSoup(data.text, 'html.parser')
-
-    # views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
-    #                     '> li > div.total_wrap.api_ani_send > div > a')
-
     views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
                         '> li > div.total_wrap.api_ani_send')
-    # imgs = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
-    #                    '> li > div.total_wrap.api_ani_send > a > span > img')
     for i in views:
         # img
         img_tag = i.select_one('a.thumb_single > span > img')
@@ -61,20 +55,9 @@ def comsec_post():
             # description
             desc_tag = i.select_one('div.total_area > div.total_group > div > a > div')
             desc = desc_tag.text
-            print(title, img, link, desc)
-
-    # og_image = soup.select_one('meta[property="og:image"]')
-    # og_title = soup.select_one('meta[property="og:title"]')
-    # og_description = soup.select_one('meta[property="og:description"]')
-    #
-    # url_title = og_title['content']
-    # url_description = og_description['content']
-    # url_image = og_image['content']
-
-    # article = {'url': comsec_receive, 'title': url_title, 'desc': url_description, 'img': url_image}
-
-    # db에 넣기
-    # db.comsec.insert_one(article)
+            card = {'link': link, 'title': title, 'desc': desc, 'img': img}
+            print(card)
+            db.comsec.insert_one(card)
 
     return jsonify({'result': 'success', 'msg': 'POST 연결되었습니다!'})
 

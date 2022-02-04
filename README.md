@@ -1,7 +1,6 @@
 # Python Scrapping
 
-이 곳은 웹개발의 한 사이클을 경험해보기 위해 만든 저장소입니다. 
-SW사관학교 정글에서 배부한 자료를 통해 학습했습니다. 저작권을 침해하지 않기 위해 저장소에 올라간 프로젝트는 정글의 자료와 관계가 없음을 알립니다.
+이 곳은 웹개발의 한 사이클을 경험해보기 위해 만든 저장소입니다. SW사관학교 정글에서 배부한 자료를 통해 학습했습니다. 저작권을 침해하지 않기 위해 저장소에 올라간 프로젝트는 정글의 자료와 관계가 없음을 알립니다.
 
 ## 학습 목표
 
@@ -21,10 +20,12 @@ SW사관학교 정글에서 배부한 자료를 통해 학습했습니다. 저�
 ### 사용한 기술 스택
 
 #### 프론트엔드
+
 - 언어: JS
 - 라이브러리: jQuery
 
 #### 백엔드
+
 - 언어: Python
 - 서버: Flask
 - DB: MongoDB
@@ -32,6 +33,7 @@ SW사관학교 정글에서 배부한 자료를 통해 학습했습니다. 저�
 
 ## study list
 
+- API란 무엇인가
 - app.py에서 정의한 함수 동작 원리 이해하기
 
 ex)
@@ -42,6 +44,7 @@ def read_list():
     result = list(db.comsec.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'articles': result})
 ```
+
 - flask의 request와 파이썬의 requests의 차이점
 
 ```return jsonify({'result': 'success', 'articles': result, 'test': "디용"})```
@@ -50,7 +53,7 @@ def read_list():
 - 위에서 리턴형식 이해하기
 - post 에서 data{} 부분 원리
 - jsonify
-    
+
       if __name__ == '__main__':
       app.run('0.0.0.0', port=5000, debug=True)
 - 위의 코드 의미
@@ -64,12 +67,12 @@ a_tag = i.select_one('div.total_area > a')
         여기서 select와 select_one일때 .text 사용
 ```
 
-
 ## 프로젝트 진행 과정
 
 ### First commit
 
 구현 목록:
+
 - url을 입력하면 썸네일과 제목, 설명을 json형식으로 추출한다.
 - 만들어둔 데이터를 mongodb에 저장한다.
 - 서버에서 db에 저장된 목록을 읽어 card 형식으로 만든다.
@@ -78,22 +81,25 @@ a_tag = i.select_one('div.total_area > a')
 ![](img/2.PNG)
 
 다음에 구현할 기능:
+
 - url을 입력하는 부분을 검색어로 대체한다.
 - 해당 검색어를 입력했을 때 결과를 추출한다.
-
 
 ### Second commit
 
 구현 목록:
+
 - 검색어 입력시 검색 결과를 추출한다.
 
 ![](img/3.PNG)
 ![](img/4.PNG)
 
 다음에 구현할 기능:
+
 - 타이틀 이외에 썸네일 사진, 설명, 링크를 같이 추출한다.
 
 프로젝트 수정 사항:
+
 - 원래 기획: 네이버 비로그인 오픈 API와 연동하기
 - 수정: 일반적인 네이버 웹 스크래핑
 - 이유: 이 프로젝트의 목적을 상기하자. SW사관학교 정글에서 배부한 자료를 나의 방식으로 학습하기 + 백엔드 지식 학습이다. 새로운 것을 학습하기 보다는 몰랐던 지식을 알아가는 것에 집중하자.
@@ -101,9 +107,24 @@ a_tag = i.select_one('div.total_area > a')
 ### Third commit
 
 구현 목록:
+
 - 검색어 입력시 타이틀, 썸네일 사진, 설명, 링크를 모두 추출한다.
 
 ![](./img/5.PNG)
 
 다음에 구현할 기능:
+
 - 추출한 데이터를 Mongo DB에 저장하기
+
+### Fourth commit
+
+구현 목록:
+
+- 검색한 데이터를 database에 card형식으로 저장
+
+![](./img/6.PNG)
+
+다음에 구현할 기능:
+
+- mongoDB에서 모든 데이터 조회하기
+- card라는 키값으로 정보 보내주기
