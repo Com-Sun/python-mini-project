@@ -1,20 +1,14 @@
 $(document).ready(function () {
-
     $("#cards-box").html("");
-    showList();
+    comsecRead();
 });
 
 function openClose() {
-    // id 값 post-box의 display 값이 block 이면(= 눈에 보이면)
     if ($("#post-box").css("display") === "block") {
-        // post-box를 가리고
         $("#post-box").hide();
-        // 다시 버튼을 클릭하면, 박스 열기를 할 수 있게 텍스트 바꿔두기
         $("#btn-post-box").text("컴색 시작");
     } else {
-        // 아니면(눈에 보이지 않으면) post-box를 펴라
         $("#post-box").show();
-        // 다시 버튼을 클릭하면, 박스 닫기를 할 수 있게 텍스트 바꿔두기
         $("#btn-post-box").text("컴색 끝");
     }
 }
@@ -34,21 +28,21 @@ function comsecPost() {
     })
 }
 
-function showList() {
+function comsecRead() {
     $.ajax({
         type: "GET",
-        url: "/memo",
+        url: "/comsec",
         data: {},
         success: function (response) {
-            let articles = response["articles"];
-            for (let i = 0; i < articles.length; i ++) {
-                makeCard(articles[i]["img"], articles[i]["url"],articles[i]["title"],articles[i]["desc"])
+            let card = response["card"];
+            for (let i = 0; i < card.length; i ++) {
+                makeCard(card[i]["img"], card[i]["link"],card[i]["title"],card[i]["desc"])
             }
         }
     })
 }
 
-function makeCard(image, url, title, desc, comment) {
+function makeCard(image, url, title, desc) {
     let temp_html = `<div class="card">
                         <img class="card-img-top" src="${image}" alt="Card image cap">
                         <div class="card-body">
@@ -57,4 +51,18 @@ function makeCard(image, url, title, desc, comment) {
                         </div>
                     </div>`;
     $("#cards-box").append(temp_html);
+}
+
+function deleteDB(){
+    $.ajax({
+        type: "GET",
+        url: "/comsec/delete",
+        data: {},
+        success: function (response) {
+            if (response["result"] === "success") {
+                alert("DB가 삭제되었소!")
+                window.location.reload()
+            }
+        }
+    })
 }
