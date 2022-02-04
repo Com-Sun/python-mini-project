@@ -1,4 +1,5 @@
 $(document).ready(function () {
+
     $("#cards-box").html("");
     showList();
 });
