@@ -18,12 +18,12 @@ function openClose() {
     }
 }
 
-function postList() {
-    let url = $("#post-url").val();
+function comsecPost() {
+    let comsec = $("#post-url").val();
     $.ajax({
         type: "POST",
-        url: "/memo",
-        data: {url_give: url},
+        url: "/comsec",
+        data: {comsec_give: comsec},
         success: function (response) { // 성공하면
             if (response["result"] === "success") {
                 alert("성공!")

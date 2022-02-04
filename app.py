@@ -1,20 +1,63 @@
 from flask import Flask, render_template, jsonify, request
 import requests
 from bs4 import BeautifulSoup
+from urllib.request import urlopen
 from pymongo import MongoClient
 
+# Server
 client = MongoClient('localhost', 27017)
 db = client.comsun
 app = Flask(__name__)
-
-# open API
-import urllib.request
 
 
 # HTML을 주는 부분
 @app.route('/')
 def home():
     return render_template('index.html')
+
+
+@app.route('/comsec', methods=['GET'])
+def comsec_read():
+    result = list(db.comsec.find({}, {'_id': False}))
+
+    # 2. articles라는 키 값으로 영화정보 내려주기
+    return jsonify({'result': 'success', 'articles': result})
+
+
+@app.route('/comsec', methods=['POST'])
+def comsec_post():
+    # 클라이언트로부터 데이터 받기
+    comsec_receive_temp = request.form['comsec_give']
+    url = ('https://search.naver.com/search.naver?where=view&sm=tab_jum&query=')
+    comsec_receive = (url + comsec_receive_temp)
+    # 2. meta tag를 스크래핑하기
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) '
+                      'Chrome/70.0.3538.77 Safari/537.36 '
+    }
+    data = requests.get(comsec_receive, headers=headers)
+    soup = BeautifulSoup(data.text, 'html.parser')
+
+    views = soup.select('#main_pack > section > div > div._list > panel-list > div > more-contents > div > ul '
+                        '> li > div.total_wrap.api_ani_send > div > a')
+    for i in views:
+        title = i.text
+        print(title)
+
+    # og_image = soup.select_one('meta[property="og:image"]')
+    # og_title = soup.select_one('meta[property="og:title"]')
+    # og_description = soup.select_one('meta[property="og:description"]')
+    #
+    # url_title = og_title['content']
+    # url_description = og_description['content']
+    # url_image = og_image['content']
+
+    # article = {'url': comsec_receive, 'title': url_title, 'desc': url_description, 'img': url_image}
+
+    # db에 넣기
+    # db.comsec.insert_one(article)
+
+    return jsonify({'result': 'success', 'msg': 'POST 연결되었습니다!'})
 
 
 @app.route('/memo', methods=['GET'])
@@ -55,22 +98,6 @@ def post_list():
 
     return jsonify({'result': 'success', 'msg': 'POST 연결되었습니다!'})
 
-
-client_id = "YOUR_CLIENT_ID"
-client_secret = "YOUR_CLIENT_SECRET"
-encText = urllib.parse.quote("검색할 단어")
-url = "https://openapi.naver.com/v1/search/blog?query=" + encText  # json 결과
-# url = "https://openapi.naver.com/v1/search/blog.xml?query=" + encText # xml 결과
-request = urllib.request.Request(url)
-request.add_header("X-Naver-Client-Id", client_id)
-request.add_header("X-Naver-Client-Secret", client_secret)
-response = urllib.request.urlopen(request)
-rescode = response.getcode()
-if (rescode == 200):
-    response_body = response.read()
-    print(response_body.decode('utf-8'))
-else:
-    print("Error Code:" + rescode)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
