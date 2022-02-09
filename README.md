@@ -215,3 +215,105 @@ http://comsun.shop
 ### 프로젝트를 마치며
 
 사실 공부는 지금부터 시작이다. 이 프로젝트에서 중요한 것은 내가 몰랐던 부분을 인지하고 기록하는 것에 있었다. 지금부터는 동작 원리를 이해하는 방향으로 학습하자.
+
+
+---
+
+- GET: 리소스 요청
+- POST: 서버에 내용(파일 포함) 전송, 서버에 리소스 새로 생성, update
+
+### Flask 동작 원리
+
+실습 과정에서 모르고 사용했던 Flask의 동작 원리에 대해 알아보자.
+
+
+```
+from flask import Flask 
+app = Flask(__name__) 
+```
+
+flask 모듈을 임포트한다.
+app에 Flask()를 넘겨서 app 전역 객체로 사용할 수 있게 한다. (인스턴스 생성)
+
+`__name__`: 파이썬에서 내부적으로 사용하는 특별한 변수. Flask app에선 리소스를 찾는데 사용한다.
+
+```
+if __name__ == '__main__':
+  app.run()
+```
+프로그램의 시작점. 다른 언어에서 main 엔트리 포인트.
+애플리케이션을 실행할 때 -python app.py를 입력한다. 이 경우 `__name__`의 값은 `__main__`이 된다. 즉, 프로그램의 시작점이 된다. 이 경우  app.run()이 실행된다.
+
+만약 app.py를 외부 모듈로 사용하는 경우, `__name__`은 app이라는 이름으로 나오게 되어 app.run()이 실행되지 않는다.
+
+```
+@app.route('/') 
+```
+- 데코레이터: app 객체의 route 함수에 request 인자를 넘기면서 HTTP 요청을 처리한다.
+
+
+```
+def hello():
+ return 'Hello, World!' 
+```
+
+- @app.route 데코레이터 URL과 이 함수를 연결한다.
+
+### request
+
+- Flask에서 request 정의: `In the client-server architecture, the request object contains all the data that is sent from the client to the server.`
+- Python에서 request 정의: `Requests is an Apache2 Licensed HTTP library, written in Python. It is designed to be used by humans to interact with the language. `
+
+둘의 명확한 차이:
+
+- Flask request: `Flask is a web framework which clients make requests to. The Flask request object contains the data that the client (eg a browser) has sent to your app - ie the URL parameters, any POST data, etc.`
+
+Flask에서 request`객체`는 클라이언트가 애플리케이션에 전달한 데이터 (POST) 등을 갖는다.
+
+- Python request: `The requests library is for your app to make HTTP request to other sites, usually APIs. It makes an outgoing request and returns the response from the external site.`
+
+Python에서 request 는 `라이브러리`이다. 애플리케이션에서 다른 사이트에 API와 같은 HTTP Request를 만들기 위해 있는 라이브러리이다. outgoing request를 만들고, 외부의 사이트에서 response를 반환한다.
+
+- 한 줄 요약: Flask에서 request는 '객체', python에서는 '라이브러리'이다.
+
+### jsonify
+
+우선 다음의 코드와 결과를 보자.
+
+```return jsonify({'result': 'success', 'articles': result, 'test': "디용"})```
+![img.png](img/1.PNG)
+
+JSON은 자료형 리스트와 딕셔너리(key, value를 한 쌍으로 갖는 자료형)를 섞어놓은것처럼 생겼다.
+
+위 코드의 결과를 보면 List자료형
+
+- articles: ...
+- result :success
+- test: 디용
+
+이 있고, 그 와중에 articles는 딕셔너리 자료형 모양임을 확인할 수 있다.
+
+- desc: ...
+- img: ...
+- title: ...
+- url: ...
+
+return 의 결과를 하나하나 해석해보자.
+
+- articles: result라는 변수를 return한다. 여기서 result는 app.py에서 정의한 결과이다. 
+- result: 'success'라는 단어 자체를 return한다.
+- test" '디용'이라는 단어 자체를 return한다.
+
+
+jsonify: `Flask jsonify is defined as a functionality within Python’s capability to convert a JSON output into a response object with application/json mimetype by wrapping up a dumps( ) function for adding the enhancements.
+ Along with the conversion of json to an output response, this function helps in conversion of multiple arguments to array or multiple arguments into dictionary.`
+
+### SSH
+
+SSH: Secure Shell Protocol - 네트워크의 프로토콜중 하나이다. 컴퓨터와 컴퓨터가 통신을 할 때 보안적으로 안전하게 통신하기 위해 사용된다.
+
+### HTTP
+
+HTTP: HyperText Transfer Protocol - HTML파일을 전송하는 프롵토콜.
+
+네트워크 프로토콜에 대한 전반적인 개념을 학습해야겠다. 이 부분은 나중에 Repo 하나를 할애해서 다시 학습할 예정
